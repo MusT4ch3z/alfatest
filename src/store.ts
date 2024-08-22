@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { cardSlice } from "./features/card/cardSlice";
-import likeSlice from "./features/like/likeSlice";
 import { pokemonApi } from "./services/pokemonApi";
 import { setupListeners } from "@reduxjs/toolkit/query";
+import { pokemonStoreSlice } from "./features/pokemonStore/pokemonStoreSlice";
+import { likeFilterSlice } from "./features/like/likeFilterSlice";
 
 export const store = configureStore({
    reducer: {
       [pokemonApi.reducerPath]: pokemonApi.reducer,
-      cards: cardSlice.reducer,
-      // like: likeSlice.reducer,
+      pokemonStore: pokemonStoreSlice.reducer,
+      likeFilter: likeFilterSlice.reducer,
    },
    middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(pokemonApi.middleware),
