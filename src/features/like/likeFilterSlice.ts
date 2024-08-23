@@ -1,9 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// export interface CounterState {
-//    value: number;
-// }
-
 const initialState: { filterIsActive: Boolean } = {
    filterIsActive: false,
 };

@@ -8,13 +8,13 @@ import {
    Typography,
 } from "@mui/material";
 import { Delete, Favorite } from "@mui/icons-material";
-import { IPokemon } from "../models/pokemon";
 import { useGetPokemonByNameQuery } from "../services/pokemonApi";
 import { useDispatch, useSelector } from "react-redux";
 import {
    deletePokemon,
    switchLike,
 } from "../features/pokemonStore/pokemonStoreSlice";
+import { useAppSelector } from "../hooks/redux";
 const _ = require("lodash");
 
 export interface CustomCardProps {
@@ -26,8 +26,8 @@ export interface CustomCardProps {
 const CustomCard: React.FC<CustomCardProps> = ({ name, like }) => {
    const dispatch = useDispatch();
    const { data } = useGetPokemonByNameQuery(name);
-   const isLikeFiltered = useSelector(
-      (state: any) => state.likeFilter.isLikeFiltered
+   const isLikeFiltered = useAppSelector(
+      (state) => state.likeFilter.filterIsActive
    );
 
    const likeHandle = () => {
@@ -40,7 +40,10 @@ const CustomCard: React.FC<CustomCardProps> = ({ name, like }) => {
    return (
       <>
          {isLikeFiltered && !like ? null : (
-            <Card sx={{ maxWidth: 300 }} className="basis-1/3">
+            <Card
+               sx={{ maxWidth: 300, maxHeight: 420, height: 420, width: 300 }}
+               className={"basis-1/3"}
+            >
                <CardContent>
                   <Typography
                      gutterBottom
@@ -50,9 +53,6 @@ const CustomCard: React.FC<CustomCardProps> = ({ name, like }) => {
                   >
                      {_.upperFirst(name)}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                     {/* {content} */}
-                  </Typography>
                   <CardMedia
                      style={{ imageRendering: "pixelated" }}
                      component="img"
@@ -61,12 +61,25 @@ const CustomCard: React.FC<CustomCardProps> = ({ name, like }) => {
                      width="140"
                      image={data?.sprites.front_default}
                   />
+                  <Typography
+                     className=" overflow-hidden text-ellipsis whitespace-nowrap"
+                     variant="body2"
+                     color="text.secondary"
+                  >
+                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                     Ratione fugit est cum praesentium dolorum ullam dolor
+                     quisquam voluptatem, eligendi modi non quis? Rerum
+                     molestiae obcaecati maiores, explicabo ducimus animi
+                     doloremque.
+                  </Typography>
                </CardContent>
-               <CardActions>
-                  <Button size="small" onClick={likeHandle}>
-                     <Favorite className="text-red-500" />
+               <CardActions className="flex justify-center ">
+                  <Button size="small" onClick={likeHandle} sx={{ flex: 1 }}>
+                     <Favorite
+                        className={like ? "text-red-500" : "text-gray-500"}
+                     />
                   </Button>
-                  <Button size="small" onClick={deleteHandle}>
+                  <Button size="small" onClick={deleteHandle} sx={{ flex: 1 }}>
                      <Delete color="primary" />
                   </Button>
                </CardActions>

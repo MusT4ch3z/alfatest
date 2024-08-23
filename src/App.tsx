@@ -2,21 +2,25 @@ import { Button, Container } from "@mui/material";
 import CustomCard from "./components/CustomCard";
 import { useGetPokemonsQuery } from "./services/pokemonApi";
 import { switchFilter } from "./features/like/likeFilterSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setPokemons } from "./features/pokemonStore/pokemonStoreSlice";
 import { useEffect } from "react";
+import { useAppSelector } from "./hooks/redux";
 
 const _ = require("lodash");
 
 function App() {
-   const { data, isSuccess } = useGetPokemonsQuery();
+   const { data } = useGetPokemonsQuery();
    const dispatch = useDispatch();
+   // const cardListNode = document.getElementById("card-list");
 
    useEffect(() => {
       dispatch(setPokemons(data?.results));
    }, [data?.results, dispatch]);
-   const store = useSelector((state: any) => state.pokemonStore);
-   console.log(store);
+   const store = useAppSelector((state) => state.pokemonStore);
+   const isLikeFiltered = useAppSelector(
+      (state) => state.likeFilter.filterIsActive
+   );
 
    const switchFilterHandler = () => {
       dispatch(switchFilter());
@@ -31,28 +35,28 @@ function App() {
                display: "flex",
             }}
          >
-            <Button variant="outlined" onClick={switchFilterHandler}>
+            <Button
+               variant={isLikeFiltered ? "contained" : "outlined"}
+               onClick={switchFilterHandler}
+            >
                Показать только понравившиеся
             </Button>
 
-            <div className="flex justify-center gap-3 py-5 flex-wrap ">
+            <div
+               id="card-list"
+               className="flex justify-center gap-3 py-5 flex-wrap "
+            >
+               {/* {cardListNode?.childNodes.length === 0 ? (
+                  <Typography>Ничего не найдено</Typography>
+               ) : null} */}
                {!_.isEmpty(store) &&
-                  store.map(
-                     (pokemon: {
-                        name: string;
-                        url: string;
-                        like: boolean;
-                     }) => (
-                        <CustomCard
-                           key={pokemon.name}
-                           name={pokemon.name}
-                           like={pokemon.like}
-                           // pokemonUrl={pokemon.url}
-                           // imgUrl="https://media.dodostatic.net/image/r:292x292/11EE7D6149EB101D8727573088FA2EFF.avif"
-                           // content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, quos."
-                        />
-                     )
-                  )}
+                  store.map((pokemon: { name: string; like: boolean }) => (
+                     <CustomCard
+                        key={pokemon.name}
+                        name={pokemon.name}
+                        like={pokemon.like}
+                     />
+                  ))}
             </div>
          </Container>
       </>

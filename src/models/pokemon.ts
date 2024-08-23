@@ -21,6 +21,11 @@ export interface IPokemon {
    weight: number;
 }
 
+export interface IPokemonShort {
+   name: string;
+   url: string;
+}
+
 export interface Ability {
    ability: Ability2;
    is_hidden: boolean;
