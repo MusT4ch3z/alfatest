@@ -2,7 +2,7 @@ import { Button, Container } from "@mui/material";
 import CustomCard from "./components/CustomCard";
 import { useGetPokemonsQuery } from "./services/pokemonApi";
 import { switchFilter } from "./features/like/likeFilterSlice";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "./hooks/redux";
 import { setPokemons } from "./features/pokemonStore/pokemonStoreSlice";
 import { useEffect } from "react";
 import { useAppSelector } from "./hooks/redux";
@@ -11,7 +11,7 @@ const _ = require("lodash");
 
 function App() {
    const { data } = useGetPokemonsQuery();
-   const dispatch = useDispatch();
+   const dispatch = useAppDispatch();
    // const cardListNode = document.getElementById("card-list");
 
    useEffect(() => {

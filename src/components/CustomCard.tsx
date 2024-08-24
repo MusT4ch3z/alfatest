@@ -5,11 +5,12 @@ import {
    CardActions,
    CardContent,
    CardMedia,
+   Skeleton,
    Typography,
 } from "@mui/material";
 import { Delete, Favorite } from "@mui/icons-material";
 import { useGetPokemonByNameQuery } from "../services/pokemonApi";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch } from "../hooks/redux";
 import {
    deletePokemon,
    switchLike,
@@ -20,12 +21,11 @@ const _ = require("lodash");
 export interface CustomCardProps {
    name: string;
    like: boolean;
-   // pokemonUrl: string;
 }
 
 const CustomCard: React.FC<CustomCardProps> = ({ name, like }) => {
-   const dispatch = useDispatch();
-   const { data } = useGetPokemonByNameQuery(name);
+   const dispatch = useAppDispatch();
+   const { data, isLoading } = useGetPokemonByNameQuery(name);
    const isLikeFiltered = useAppSelector(
       (state) => state.likeFilter.filterIsActive
    );
@@ -43,6 +43,7 @@ const CustomCard: React.FC<CustomCardProps> = ({ name, like }) => {
             <Card
                sx={{ maxWidth: 300, maxHeight: 420, height: 420, width: 300 }}
                className={"basis-1/3"}
+               onClick={() => console.log("clicked")}
             >
                <CardContent>
                   <Typography
@@ -53,16 +54,25 @@ const CustomCard: React.FC<CustomCardProps> = ({ name, like }) => {
                   >
                      {_.upperFirst(name)}
                   </Typography>
-                  <CardMedia
-                     style={{ imageRendering: "pixelated" }}
-                     component="img"
-                     alt={name}
-                     height="140"
-                     width="140"
-                     image={data?.sprites.front_default}
-                  />
+                  {isLoading ? (
+                     <Skeleton
+                        variant="rectangular"
+                        animation="wave"
+                        height={268}
+                     />
+                  ) : (
+                     <CardMedia
+                        style={{ imageRendering: "pixelated" }}
+                        component="img"
+                        alt={name}
+                        height="140"
+                        width="140"
+                        image={data?.sprites.front_default}
+                     />
+                  )}
+
                   <Typography
-                     className=" overflow-hidden text-ellipsis whitespace-nowrap"
+                     className="overflow-hidden text-ellipsis whitespace-nowrap"
                      variant="body2"
                      color="text.secondary"
                   >
@@ -74,12 +84,26 @@ const CustomCard: React.FC<CustomCardProps> = ({ name, like }) => {
                   </Typography>
                </CardContent>
                <CardActions className="flex justify-center ">
-                  <Button size="small" onClick={likeHandle} sx={{ flex: 1 }}>
+                  <Button
+                     size="small"
+                     onClick={(e) => {
+                        e.stopPropagation();
+                        likeHandle();
+                     }}
+                     sx={{ flex: 1 }}
+                  >
                      <Favorite
                         className={like ? "text-red-500" : "text-gray-500"}
                      />
                   </Button>
-                  <Button size="small" onClick={deleteHandle} sx={{ flex: 1 }}>
+                  <Button
+                     size="small"
+                     onClick={(e) => {
+                        e.stopPropagation();
+                        deleteHandle();
+                     }}
+                     sx={{ flex: 1 }}
+                  >
                      <Delete color="primary" />
                   </Button>
                </CardActions>
