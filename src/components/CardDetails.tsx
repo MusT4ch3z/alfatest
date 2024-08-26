@@ -2,43 +2,33 @@ import React from "react";
 import {
    Button,
    Card,
-   CardActions,
    CardContent,
    CardMedia,
    Skeleton,
    Typography,
 } from "@mui/material";
-import { Delete, Favorite } from "@mui/icons-material";
+
 import { useGetPokemonByNameQuery } from "../services/pokemonApi";
-import { useAppDispatch } from "../hooks/redux";
-import {
-   deletePokemon,
-   switchLike,
-} from "../features/pokemonStore/pokemonStoreSlice";
-import { useAppSelector } from "../hooks/redux";
+import { useNavigate, useParams } from "react-router-dom";
 const _ = require("lodash");
 
-export interface CustomCardProps {
-   name: string;
-   like: boolean;
-}
-
-const CardDetails: React.FC<CustomCardProps> = ({ name, like }) => {
-   const dispatch = useAppDispatch();
-   const { data, isLoading } = useGetPokemonByNameQuery(name);
-   const isLikeFiltered = useAppSelector(
-      (state) => state.likeFilter.filterIsActive
+const CardDetails: React.FC<{}> = () => {
+   const { pokemonName } = useParams();
+   const navigate = useNavigate();
+   const goBackHandler = () => navigate(-1);
+   const { data, isLoading } = useGetPokemonByNameQuery(
+      _.lowerFirst(pokemonName)
    );
 
-   const likeHandle = () => {
-      dispatch(switchLike(name));
-   };
-
-   const deleteHandle = () => {
-      dispatch(deletePokemon(name));
-   };
    return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex flex-col justify-center items-center h-screen">
+         <Button
+            variant="outlined"
+            sx={{ marginBottom: "20px" }}
+            onClick={() => goBackHandler()}
+         >
+            Вернуться к списку покемонов
+         </Button>
          <Card sx={{ maxWidth: 300, maxHeight: 720, width: 300 }}>
             <CardContent>
                <Typography
@@ -47,7 +37,7 @@ const CardDetails: React.FC<CustomCardProps> = ({ name, like }) => {
                   component="div"
                   align="center"
                >
-                  {_.upperFirst(name)}
+                  {_.upperFirst(pokemonName)}
                </Typography>
                {isLoading ? (
                   <Skeleton
@@ -59,7 +49,7 @@ const CardDetails: React.FC<CustomCardProps> = ({ name, like }) => {
                   <CardMedia
                      style={{ imageRendering: "pixelated" }}
                      component="img"
-                     alt={name}
+                     alt={pokemonName}
                      height="140"
                      width="140"
                      image={data?.sprites.front_default}

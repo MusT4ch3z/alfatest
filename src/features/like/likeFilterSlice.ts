@@ -14,7 +14,6 @@ export const likeFilterSlice = createSlice({
    },
 });
 
-// Action creators are generated for each case reducer function
 export const { switchFilter } = likeFilterSlice.actions;
 
 export default likeFilterSlice.reducer;

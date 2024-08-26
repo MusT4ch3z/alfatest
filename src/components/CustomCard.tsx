@@ -16,6 +16,7 @@ import {
    switchLike,
 } from "../features/pokemonStore/pokemonStoreSlice";
 import { useAppSelector } from "../hooks/redux";
+import { useNavigate } from "react-router-dom";
 const _ = require("lodash");
 
 export interface CustomCardProps {
@@ -25,10 +26,14 @@ export interface CustomCardProps {
 
 const CustomCard: React.FC<CustomCardProps> = ({ name, like }) => {
    const dispatch = useAppDispatch();
+   const navigate = useNavigate();
    const { data, isLoading } = useGetPokemonByNameQuery(name);
    const isLikeFiltered = useAppSelector(
       (state) => state.likeFilter.filterIsActive
    );
+   const navigateHandler = (name: string) => {
+      navigate(`/pokemons/${name}`);
+   };
 
    const likeHandle = () => {
       dispatch(switchLike(name));
@@ -42,8 +47,8 @@ const CustomCard: React.FC<CustomCardProps> = ({ name, like }) => {
          {isLikeFiltered && !like ? null : (
             <Card
                sx={{ maxWidth: 300, maxHeight: 420, height: 420, width: 300 }}
-               className={"basis-1/3"}
-               onClick={() => console.log("clicked")}
+               className={"cursor-pointer"}
+               onClick={() => navigateHandler(name)}
             >
                <CardContent>
                   <Typography

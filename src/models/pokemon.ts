@@ -26,6 +26,13 @@ export interface IPokemonShort {
    url: string;
 }
 
+export interface IGetPokemonsResponse {
+   count: number;
+   next: string;
+   previous: any;
+   results: IPokemonShort[];
+}
+
 export interface Ability {
    ability: Ability2;
    is_hidden: boolean;

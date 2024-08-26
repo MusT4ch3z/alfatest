@@ -9,6 +9,6 @@ export const router = createBrowserRouter([
    },
    {
       path: "pokemons/:pokemonName",
-      element: <CardDetails name="pikachu" like={true} />,
+      element: <CardDetails />,
    },
 ]);
