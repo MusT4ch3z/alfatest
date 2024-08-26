@@ -1,5 +1,6 @@
 {
    "name": "salfa",
+   "homepage": "http://must4ch3z.github.io/salfa",
    "version": "0.1.0",
    "private": true,
    "dependencies": {
